@@ -1,10 +1,10 @@
 # Backend Reference Guide — TechCup & Spring Boot
 
-Guía de referencia rápida para el stack backend del proyecto. Contiene comandos, dependencias y configuraciones esenciales.
+Quick reference guide for the backend stack. Contains commands, dependencies, and essential configurations.
 
 ---
 
-## Tabla de contenido
+## Table of Contents
 
 1. [Maven](#maven)
 2. [Spring Boot](#spring-boot)
@@ -19,25 +19,25 @@ Guía de referencia rápida para el stack backend del proyecto. Contiene comando
 11. [SLF4J Logger](#slf4j-logger)
 12. [GitHub Actions CI/CD](#github-actions-cicd)
 13. [Azure App Service](#azure-app-service)
-14. [Git — flujo de trabajo](#git--flujo-de-trabajo)
-15. [pom.xml — dependencias de referencia](#pomxml--dependencias-de-referencia)
+14. [Git — Workflow](#git--workflow)
+15. [pom.xml — Dependency Reference](#pomxml--dependency-reference)
 
 ---
 
 ## Maven
 
 ```bash
-mvn compile                          # Compilar el proyecto
-mvn test                             # Correr los tests
-mvn clean test                       # Limpiar y correr tests
-mvn clean verify                     # Limpiar, compilar, testear y verificar
-mvn spring-boot:run                  # Levantar el servidor
-mvn clean test jacoco:report         # Generar reporte de cobertura JaCoCo
-mvn package -DskipTests              # Generar el JAR sin correr tests
-mvn sonar:sonar                      # Correr análisis de SonarQube
+mvn compile                          # Compile the project
+mvn test                             # Run tests
+mvn clean test                       # Clean and run tests
+mvn clean verify                     # Clean, compile, test and verify
+mvn spring-boot:run                  # Start the server
+mvn clean test jacoco:report         # Generate JaCoCo coverage report
+mvn package -DskipTests              # Generate JAR without running tests
+mvn sonar:sonar                      # Run SonarQube analysis
 ```
 
-> **Con perfil local (cuando se usan variables de entorno):**
+> **With local profile (when using environment variables):**
 > ```bash
 > mvn spring-boot:run "-Dspring-boot.run.profiles=local"
 > ```
@@ -46,16 +46,16 @@ mvn sonar:sonar                      # Correr análisis de SonarQube
 
 ## Spring Boot
 
-### Levantar el proyecto con variables de entorno (PowerShell)
+### Start the project with environment variables (PowerShell)
 
 ```powershell
 $env:DB_URL="jdbc:postgresql://localhost:5432/techcup"
 $env:DB_USERNAME="postgres"
-$env:DB_PASSWORD="tu_password"
+$env:DB_PASSWORD="your_password"
 mvn spring-boot:run
 ```
 
-### application.properties — configuración base
+### application.properties — base configuration
 
 ```properties
 logging.file.name=logs/tech_cup.log
@@ -82,17 +82,17 @@ jwt.access-token-expiration-minutes=15
 jwt.refresh-token-expiration-days=7
 ```
 
-### application-local.properties — credenciales locales (nunca subir a Git)
+### application-local.properties — local credentials (never push to Git)
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/techcup
 spring.datasource.username=postgres
-spring.datasource.password=tu_password_personal
+spring.datasource.password=your_personal_password
 ```
 
-### application-test.properties — H2 para pruebas
+### application-test.properties — H2 for tests
 
-Ubicación: `src/test/resources/application-test.properties`
+Location: `src/test/resources/application-test.properties`
 
 ```properties
 spring.datasource.url=jdbc:h2:mem:testdb
@@ -109,53 +109,53 @@ spring.jpa.show-sql=true
 
 ## PostgreSQL
 
-### Agregar al PATH (PowerShell — temporal por sesión)
+### Add to PATH (PowerShell — temporary for current session)
 
 ```powershell
 $env:PATH += ";C:\Program Files\PostgreSQL\18\bin"
 ```
 
-### Comandos básicos
+### Basic commands
 
 ```bash
-psql -U postgres                     # Conectarse a PostgreSQL
-psql --version                       # Ver versión instalada
+psql -U postgres                     # Connect to PostgreSQL
+psql --version                       # Check installed version
 ```
 
-### Dentro de psql
+### Inside psql
 
 ```sql
-CREATE DATABASE techcup;             -- Crear base de datos
-\l                                   -- Listar bases de datos
-\c techcup                           -- Conectarse a una base de datos
-\dt                                  -- Listar tablas
-\q                                   -- Salir
+CREATE DATABASE techcup;             -- Create database
+\l                                   -- List databases
+\c techcup                           -- Connect to a database
+\dt                                  -- List tables
+\q                                   -- Exit
 ```
 
-### Cambiar contraseña del usuario postgres
+### Change postgres user password
 
 ```sql
-ALTER USER postgres WITH PASSWORD 'nueva_password';
+ALTER USER postgres WITH PASSWORD 'new_password';
 ```
 
 ---
 
 ## Docker
 
-### Comandos esenciales
+### Essential commands
 
 ```bash
-docker --version                     # Verificar instalación
-docker ps                            # Ver contenedores corriendo
-docker ps -a                         # Ver todos los contenedores
-docker images                        # Ver imágenes descargadas
-docker start nombre                  # Iniciar un contenedor detenido
-docker stop nombre                   # Detener un contenedor
-docker rm nombre                     # Eliminar un contenedor
-docker logs nombre                   # Ver logs de un contenedor
+docker --version                     # Check installation
+docker ps                            # Show running containers
+docker ps -a                         # Show all containers
+docker images                        # Show downloaded images
+docker start name                    # Start a stopped container
+docker stop name                     # Stop a container
+docker rm name                       # Remove a container
+docker logs name                     # View container logs
 ```
 
-### PostgreSQL con Docker
+### PostgreSQL with Docker
 
 ```bash
 docker run --name postgres-techcup \
@@ -166,67 +166,67 @@ docker run --name postgres-techcup \
   -d postgres
 ```
 
-### MongoDB con Docker
+### MongoDB with Docker
 
 ```bash
 docker run --name mongo-techcup -p 27017:27017 -d mongo
 ```
 
-### SonarQube con Docker
+### SonarQube with Docker
 
 ```bash
 docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
-docker start sonarqube               # Reiniciar si se detuvo
+docker start sonarqube               # Restart if stopped
 ```
 
-> **Nota:** Docker Desktop debe estar abierto antes de correr cualquier comando docker.
+> **Note:** Docker Desktop must be running before using any docker command.
 
 ---
 
 ## SonarQube
 
-### Acceso
+### Access
 
 ```
 URL:      http://localhost:9000
-Usuario:  admin
-Password: (la que configuraste al primer login)
+User:     admin
+Password: (the one you set on first login)
 ```
 
-### Generar token
+### Generate token
 
-En SonarQube: `My Account → Security → Generate Token`
+In SonarQube: `My Account → Security → Generate Token`
 - Type: `User Token`
 - Expiration: `No expiration`
 
-### Configuración en pom.xml (dentro de `<properties>`)
+### Configuration in pom.xml (inside `<properties>`)
 
 ```xml
 <sonar.projectKey>tech_cup</sonar.projectKey>
 <sonar.projectName>tech_cup</sonar.projectName>
 <sonar.host.url>http://localhost:9000</sonar.host.url>
-<sonar.login>TU_TOKEN_AQUI</sonar.login>
+<sonar.login>YOUR_TOKEN_HERE</sonar.login>
 <sonar.coverage.jacoco.xmlReportPaths>
     target/site/jacoco/jacoco.xml
 </sonar.coverage.jacoco.xmlReportPaths>
 ```
 
-> **Importante:** Usar `sonar.login` (no `sonar.token`) para SonarQube versión 9.x
+> **Important:** Use `sonar.login` (not `sonar.token`) for SonarQube version 9.x
 
-### Correr el análisis
+### Run the analysis
 
 ```bash
-# Si el token está en el pom.xml
+# If the token is in pom.xml
 mvn sonar:sonar
 
-# Si el token NO está en el pom.xml (recomendado para equipos)
-mvn sonar:sonar "-Dsonar.login=TU_TOKEN_AQUI"
+# If the token is NOT in pom.xml (recommended for teams)
+mvn sonar:sonar "-Dsonar.login=YOUR_TOKEN_HERE"
 
-# Análisis completo con tests y reporte
-mvn clean verify sonar:sonar "-Dsonar.login=TU_TOKEN_AQUI"
+# Full analysis with tests and report
+mvn clean verify sonar:sonar "-Dsonar.login=YOUR_TOKEN_HERE"
 ```
 
-### Plugin en pom.xml
+### Plugin in pom.xml
 
 ```xml
 <plugin>
@@ -240,20 +240,20 @@ mvn clean verify sonar:sonar "-Dsonar.login=TU_TOKEN_AQUI"
 
 ## JaCoCo
 
-### Comandos
+### Commands
 
 ```bash
-mvn clean test jacoco:report                    # Generar reporte HTML
-mvn clean verify                                # Generar reporte + verificar mínimos
+mvn clean test jacoco:report                    # Generate HTML report
+mvn clean verify                                # Generate report + verify minimums
 ```
 
-### Ver el reporte (PowerShell)
+### Open the report (PowerShell)
 
 ```powershell
 Invoke-Item target/site/jacoco/index.html
 ```
 
-### Plugin completo en pom.xml
+### Full plugin in pom.xml
 
 ```xml
 <plugin>
@@ -280,7 +280,7 @@ Invoke-Item target/site/jacoco/index.html
                             <limit>
                                 <counter>LINE</counter>
                                 <value>COVEREDRATIO</value>
-                                <minimum>0.80</minimum>  <!-- Ajustar según el proyecto -->
+                                <minimum>0.80</minimum>  <!-- Adjust per project -->
                             </limit>
                         </limits>
                     </rule>
@@ -291,7 +291,7 @@ Invoke-Item target/site/jacoco/index.html
 </plugin>
 ```
 
-### Dependencia H2 (para pruebas sin PostgreSQL)
+### H2 dependency (for tests without PostgreSQL)
 
 ```xml
 <dependency>
@@ -305,13 +305,13 @@ Invoke-Item target/site/jacoco/index.html
 
 ## Swagger / SpringDoc
 
-### Acceso
+### Access
 
 ```
 http://localhost:8080/swagger-ui.html
 ```
 
-### Dependencia en pom.xml
+### Dependency in pom.xml
 
 ```xml
 <dependency>
@@ -321,7 +321,7 @@ http://localhost:8080/swagger-ui.html
 </dependency>
 ```
 
-### Configuración en application.properties
+### Configuration in application.properties
 
 ```properties
 springdoc.api-docs.path=/api-docs
@@ -329,22 +329,22 @@ springdoc.swagger-ui.path=/swagger-ui.html
 springdoc.swagger-ui.enabled=true
 ```
 
-### Anotaciones en los controllers
+### Annotations in controllers
 
 ```java
-@Tag(name = "Torneos", description = "Operaciones relacionadas con torneos")
+@Tag(name = "Tournaments", description = "Operations related to tournament management")
 @RestController
 @RequestMapping("/api/tournaments")
 public class TournamentController {
 
-    @Operation(summary = "Crear torneo", description = "Crea un nuevo torneo en estado Borrador")
-    @ApiResponse(responseCode = "201", description = "Torneo creado exitosamente")
+    @Operation(summary = "Create tournament", description = "Creates a new tournament in Draft status")
+    @ApiResponse(responseCode = "201", description = "Tournament created successfully")
     @PostMapping
     public ResponseEntity<TournamentDto> create(@RequestBody CreateTournamentDto dto) { ... }
 }
 ```
 
-### Clase de configuración (opcional para personalizar título)
+### Configuration class (optional, to customize title)
 
 ```java
 @Configuration
@@ -356,12 +356,12 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("TechCup API")
                 .version("1.0.0")
-                .description("API REST para la gestión del torneo TechCup"));
+                .description("REST API for TechCup tournament management"));
     }
 }
 ```
 
-> **Si usas Spring Security:** permitir acceso a Swagger en SecurityConfig:
+> **If using Spring Security:** allow Swagger access in SecurityConfig:
 > ```java
 > .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 > ```
@@ -370,55 +370,55 @@ public class SwaggerConfig {
 
 ## Postman
 
-### Configuración del environment
+### Environment setup
 
 | Variable | Value |
 |----------|-------|
 | `base_url` | `http://localhost:8080` |
-| `token` | (se llena automáticamente con el script) |
+| `token` | (filled automatically by script) |
 
-### Script para guardar el token automáticamente
+### Script to save token automatically
 
-En el request de login → pestaña `Scripts` → `Post-response`:
+In login request → `Scripts` tab → `Post-response`:
 
 ```javascript
 const response = pm.response.json();
 pm.environment.set("token", response.accessToken);
 ```
 
-### Flujo de autenticación
+### Authentication flow
 
 ```
 POST {{base_url}}/api/auth/login
 Body → raw → JSON:
 {
-  "email": "usuario@escuelaing.edu.co",
+  "email": "user@escuelaing.edu.co",
   "password": "123456"
 }
 ```
 
-### Usar el token en requests protegidos
+### Use the token in protected requests
 
 `Authorization → Bearer Token → {{token}}`
 
-### Endpoints principales TechCup
+### Main TechCup endpoints
 
 ```
-# Autenticación
+# Authentication
 POST   {{base_url}}/api/auth/login
 POST   {{base_url}}/api/auth/refresh
 
-# Usuarios
-POST   {{base_url}}/api/users               (público)
+# Users
+POST   {{base_url}}/api/users               (public)
 GET    {{base_url}}/api/users               (ADMINISTRATOR)
 GET    {{base_url}}/api/users/{id}          (ADMINISTRATOR)
 PUT    {{base_url}}/api/users/{id}          (ADMINISTRATOR)
 PATCH  {{base_url}}/api/users/{id}/role     (ADMINISTRATOR)
 PATCH  {{base_url}}/api/users/{id}/inactive (ADMINISTRATOR)
 
-# Torneos
-GET    {{base_url}}/api/tournaments         (público)
-GET    {{base_url}}/api/tournaments/{id}    (público)
+# Tournaments
+GET    {{base_url}}/api/tournaments         (public)
+GET    {{base_url}}/api/tournaments/{id}    (public)
 POST   {{base_url}}/api/tournaments         (ORGANIZER/ADMINISTRATOR)
 PUT    {{base_url}}/api/tournaments/{id}    (ORGANIZER/ADMINISTRATOR)
 DELETE {{base_url}}/api/tournaments/{id}    (ORGANIZER/ADMINISTRATOR)
@@ -430,19 +430,19 @@ PATCH  {{base_url}}/api/tournaments/{id}/finish  (ORGANIZER/ADMINISTRATOR)
 
 ## MongoDB
 
-### Agregar al PATH (PowerShell — temporal)
+### Add to PATH (PowerShell — temporary)
 
 ```powershell
 $env:PATH += ";C:\Program Files\MongoDB\Server\8.2\bin"
 ```
 
-### Verificar servicio
+### Check service status
 
 ```powershell
 Get-Service -Name MongoDB
 ```
 
-### Dependencia en pom.xml
+### Dependency in pom.xml
 
 ```xml
 <dependency>
@@ -451,7 +451,7 @@ Get-Service -Name MongoDB
 </dependency>
 ```
 
-### application.properties del microservicio de imágenes
+### application.properties for image microservice
 
 ```properties
 spring.application.name=image-service
@@ -461,13 +461,13 @@ spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
 ```
 
-### Endpoints del microservicio de imágenes
+### Image microservice endpoints
 
 ```
 POST   http://localhost:8081/imagenes
        Body: form-data
          archivo: [File]
-         referenciaExterna: "torneo-1"
+         referenciaExterna: "tournament-1"
 
 GET    http://localhost:8081/imagenes
 GET    http://localhost:8081/imagenes/{id}
@@ -475,14 +475,14 @@ GET    http://localhost:8081/imagenes/referencia/{referenciaExterna}
 DELETE http://localhost:8081/imagenes/{id}
 ```
 
-### Anotación de documento MongoDB
+### MongoDB document annotation
 
 ```java
 @Document(collection = "imagenes")
 public class ImagenDocument {
     @Id
     private String id;
-    // campos...
+    // fields...
 }
 ```
 
@@ -490,7 +490,7 @@ public class ImagenDocument {
 
 ## JWT & Spring Security
 
-### Dependencias en pom.xml
+### Dependencies in pom.xml
 
 ```xml
 <!-- Spring Security -->
@@ -519,21 +519,21 @@ public class ImagenDocument {
 </dependency>
 ```
 
-### Configuración JWT en application.properties
+### JWT configuration in application.properties
 
 ```properties
-jwt.secret=${JWT_SECRET:mi-clave-secreta-de-al-menos-32-caracteres-1234}
+jwt.secret=${JWT_SECRET:my-secret-key-at-least-32-characters-1234}
 jwt.access-token-expiration-minutes=15
 jwt.refresh-token-expiration-days=7
 ```
 
-### Respuesta del login
+### Login response
 
 ```json
 {
   "id": "uuid",
-  "email": "usuario@escuelaing.edu.co",
-  "name": "Nombre",
+  "email": "user@escuelaing.edu.co",
+  "name": "Name",
   "roles": ["PLAYER"],
   "accessToken": "eyJhbGci...",
   "refreshToken": "eyJhbGci...",
@@ -543,14 +543,14 @@ jwt.refresh-token-expiration-days=7
 }
 ```
 
-> - `accessToken` expira en 15 minutos — úsalo en los requests
-> - `refreshToken` expira en 7 días — úsalo para renovar el accessToken sin hacer login
+> - `accessToken` expires in 15 minutes — use it in requests
+> - `refreshToken` expires in 7 days — use it to renew the accessToken without logging in again
 
 ---
 
 ## SLF4J Logger
 
-### Uso en cualquier clase de servicio
+### Usage in any service class
 
 ```java
 import org.slf4j.Logger;
@@ -562,38 +562,38 @@ public class TournamentService {
     private static final Logger log = LoggerFactory.getLogger(TournamentService.class);
 
     public TournamentDto create(CreateTournamentDto dto) {
-        log.info("Creando torneo: {}", dto.getName());
-        // lógica...
-        log.debug("Torneo procesado correctamente");
-        return resultado;
+        log.info("Creating tournament: {}", dto.getName());
+        // logic...
+        log.debug("Tournament processed successfully");
+        return result;
     }
 
     public TournamentDto getById(String id) {
-        log.debug("Buscando torneo con id: {}", id);
-        // si no existe:
-        log.warn("Torneo no encontrado con id: {}", id);
-        // si hay error:
-        log.error("Error al buscar torneo: {}", e.getMessage());
+        log.debug("Looking for tournament with id: {}", id);
+        // if not found:
+        log.warn("Tournament not found with id: {}", id);
+        // if error:
+        log.error("Error looking for tournament: {}", e.getMessage());
     }
 }
 ```
 
-### Niveles de log
+### Log levels
 
-| Nivel | Cuándo usar |
+| Level | When to use |
 |-------|-------------|
-| `log.debug()` | Información detallada para desarrollo |
-| `log.info()` | Acciones importantes del sistema |
-| `log.warn()` | Algo inesperado pero no crítico |
-| `log.error()` | Errores que deben atenderse |
+| `log.debug()` | Detailed info for development |
+| `log.info()` | Important system actions |
+| `log.warn()` | Something unexpected but not critical |
+| `log.error()` | Errors that need attention |
 
-### Ver logs en tiempo real (PowerShell)
+### Watch logs in real time (PowerShell)
 
 ```powershell
 Get-Content logs\tech_cup.log -Wait
 ```
 
-### Configuración en application.properties
+### Configuration in application.properties
 
 ```properties
 logging.file.name=logs/tech_cup.log
@@ -603,13 +603,13 @@ logging.file.name=logs/tech_cup.log
 
 ## GitHub Actions CI/CD
 
-### Ubicación del archivo
+### File location
 
 ```
 .github/workflows/ci-cd.yml
 ```
 
-### Pipeline completo
+### Full pipeline
 
 ```yaml
 name: CI/CD Pipeline TechCup
@@ -674,87 +674,87 @@ jobs:
           package: target/*.jar
 ```
 
-### Secrets a configurar en GitHub
+### Secrets to configure in GitHub
 
 `Settings → Secrets and variables → Actions → New repository secret`
 
-| Secret | Valor |
+| Secret | Value |
 |--------|-------|
 | `DB_URL` | `jdbc:postgresql://host:5432/techcup` |
-| `DB_USERNAME` | usuario de PostgreSQL |
-| `DB_PASSWORD` | contraseña de PostgreSQL |
-| `JWT_SECRET` | clave secreta JWT |
-| `AZURE_WEBAPP_NAME` | nombre del App Service en Azure |
-| `AZURE_PUBLISH_PROFILE` | contenido del archivo .PublishSettings de Azure |
+| `DB_USERNAME` | PostgreSQL username |
+| `DB_PASSWORD` | PostgreSQL password |
+| `JWT_SECRET` | JWT secret key |
+| `AZURE_WEBAPP_NAME` | Azure App Service name |
+| `AZURE_PUBLISH_PROFILE` | Contents of the .PublishSettings file from Azure |
 
 ---
 
 ## Azure App Service
 
-### Configuración recomendada (plan gratuito)
+### Recommended configuration (free plan)
 
-| Campo | Valor |
+| Field | Value |
 |-------|-------|
 | Runtime stack | Java 17 |
 | Java web server | Java SE |
 | Operating System | Linux |
 | Pricing plan | Free F1 |
 
-### Cambiar puerto para Azure (en application.properties)
+### Change port for Azure (in application.properties)
 
 ```properties
 server.port=80
 ```
 
-### Variables de entorno en Azure
+### Environment variables in Azure
 
-En App Service: `Configuration → Application settings`
+In App Service: `Configuration → Application settings`
 
-Agregar las mismas variables que en los secrets de GitHub:
+Add the same variables as the GitHub secrets:
 - `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
 - `JWT_SECRET`
 
-### Ver logs en Azure
+### View logs in Azure
 
-En App Service: `Log stream`
+In App Service: `Log stream`
 
 ---
 
-## Git — flujo de trabajo
+## Git — Workflow
 
-### Comandos diarios
+### Daily commands
 
 ```bash
-git status                           # Ver estado del repositorio
-git branch                           # Ver ramas
-git checkout develop                 # Cambiar a develop
-git pull origin develop              # Traer cambios del equipo
-git checkout -b feature/nombre       # Crear nueva rama
-git add .                            # Agregar todos los cambios
-git add archivo.java                 # Agregar un archivo específico
-git commit -m "feat: descripción"    # Hacer commit
-git push origin feature/nombre       # Subir la rama a GitHub
+git status                           # Check repository status
+git branch                           # List branches
+git checkout develop                 # Switch to develop
+git pull origin develop              # Pull team changes
+git checkout -b feature/name         # Create new branch
+git add .                            # Stage all changes
+git add File.java                    # Stage a specific file
+git commit -m "feat: description"    # Commit
+git push origin feature/name         # Push branch to GitHub
 ```
 
-### Descartar cambios locales
+### Discard local changes
 
 ```bash
-git restore .                        # Descartar cambios no commiteados
-git clean -fd                        # Eliminar archivos nuevos no trackeados
+git restore .                        # Discard uncommitted changes
+git clean -fd                        # Remove new untracked files
 ```
 
-### Eliminar archivo subido por error
+### Remove a file pushed by mistake
 
 ```bash
-git rm '$null'                       # Eliminar archivo $null
-git rm -r --cached logs/             # Dejar de trackear carpeta logs
+git rm '$null'                       # Remove $null file
+git rm -r --cached logs/             # Stop tracking logs folder
 git commit -m "remove unwanted files"
 git push origin develop
 ```
 
-### .gitignore recomendado
+### Recommended .gitignore
 
 ```
 target/
@@ -770,7 +770,7 @@ $null
 
 ---
 
-## pom.xml — dependencias de referencia
+## pom.xml — Dependency Reference
 
 ```xml
 <dependencies>
@@ -793,7 +793,7 @@ $null
         <scope>runtime</scope>
     </dependency>
 
-    <!-- H2 para pruebas -->
+    <!-- H2 for tests -->
     <dependency>
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
@@ -838,7 +838,7 @@ $null
         <scope>runtime</scope>
     </dependency>
 
-    <!-- Validaciones -->
+    <!-- Validations -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-validation</artifactId>
@@ -862,27 +862,27 @@ $null
 
 ---
 
-## Comandos más importantes para memorizar
+## Most Important Commands to Memorize
 
 ```bash
-# Levantar el proyecto
+# Start the project
 mvn spring-boot:run "-Dspring-boot.run.profiles=local"
 
-# Correr tests y ver cobertura
+# Run tests and check coverage
 mvn clean test jacoco:report
 
-# Análisis de calidad
-mvn sonar:sonar "-Dsonar.login=TU_TOKEN"
+# Quality analysis
+mvn sonar:sonar "-Dsonar.login=YOUR_TOKEN"
 
-# Análisis completo (tests + sonar)
-mvn clean verify sonar:sonar "-Dsonar.login=TU_TOKEN"
+# Full analysis (tests + sonar)
+mvn clean verify sonar:sonar "-Dsonar.login=YOUR_TOKEN"
 
-# Levantar PostgreSQL con Docker
+# Start PostgreSQL with Docker
 docker start postgres-techcup
 
-# Levantar SonarQube con Docker
+# Start SonarQube with Docker
 docker start sonarqube
 
-# Ver logs en tiempo real
+# Watch logs in real time
 Get-Content logs\tech_cup.log -Wait    # PowerShell
 ```
